@@ -7,4 +7,31 @@ from langchain_community.document_transformers import Html2TextTransformer
 from .base import BaseCrawler
 
 class CustomArticleCrawler(BaseCrawler):
-    model = Article
+    model = ArticleDocument
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def extract(self, link: str, **kwargs) -> None:
+        old_model = self.model.find(link=link)
+        if old_model is not None:
+            print(f"Article already exists: {link}")
+            return
+
+        print(f"Starting scrapping article.....: {link}")
+
+        loader = AsyncHtmlLoader([link])
+        docs = loader.load()
+
+        html2text = Html2TextTransformer()
+        docs_transformed = html2text.transform_documents(docs)
+        docs_transformed = docs_transformed[0]
+
+        content = {
+            "Title": doc_transformed.metadata.get("title"),
+            "Subtitle": doc_transformed.metadata.get("description"),
+            "Content": doc_transformed.page_content,
+            "language": doc_transformed.metadata.get("language"),
+        }
+
+        parsed_url = urlparse(link)
