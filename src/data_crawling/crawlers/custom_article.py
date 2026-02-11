@@ -35,3 +35,14 @@ class CustomArticleCrawler(BaseCrawler):
         }
 
         parsed_url = urlparse(link)
+        platform = parsed_url.netloc
+        # platform is the same as domain name
+
+        instance = self.model(
+            content=content,
+            link=link,
+            platform=platform,
+            author_id=kwargs.get("author_id"),
+        )
+        instance.save()
+        print(f"Finished scrapping article: {link}")
