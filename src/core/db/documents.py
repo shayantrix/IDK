@@ -1,9 +1,9 @@
 import uuid
-import typing as List, Optional
+from typing import List, Optional
 from pydantic import UUID4, BaseModel, ConfigDict, Field
 from pymongo import errors
 
-from core.db.mongo import connection
+from .mongo import connection
 
 _database = connection.get_database()
 
@@ -51,7 +51,7 @@ class BaseDocument(BaseModel):
     @classmethod
     def _get_collection_name(cls):
         if not hasattr(cls, "Settings") or not hasattr(cls.Settings, "name"):
-            raise ImproperlyConfigured(
+            raise RuntimeError(
                 "Document should define an Settings configuration class with the name of the collection"
             )
         return cls.Settings.name
@@ -84,7 +84,7 @@ class BaseDocument(BaseModel):
             return None
 
     @classmethod
-    def multi_insert(cls, documents: List, **kwargs) -> Optional[List[str]]:
+    def multi_insert(cls, documents: List, **kwargs) -> Optional[list[str]]:
         collection = _database[cls._get_collection_name()]
         try:
             result = collection.insert_many(
@@ -99,7 +99,7 @@ class BaseDocument(BaseModel):
 class ArticleDocument(BaseDocument):
     platform: str
     link: str
-    content: str
+    content: dict
     author_id: str = Field(alias="author_id")
 
     class Settings:

@@ -1,27 +1,36 @@
 # connection of monogo db
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+
 from core.config import settings
 
 class MongoDatabaseConnector:
-    _instance: MongoClient | None = None
+    _instance = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
-            try:
-                cls._instance = MongoClient(settings.MONGO_DATABASE_HOST)
-            except ConnectionFailure:
-                raise ConnectionFailure("Failed to connect to MongoDB")
+            cls._instance = super().__new__(cls)
+            cls._instance._client = None
+            cls._instance._initialized = False
         return cls._instance
 
+    def __init__(self):
+        if self._initialized:
+            return
+        try:
+            # MongoClient is lazy, this mostly validates URI shape here.
+            self._client = MongoClient(settings.MONGO_DATABASE_HOST)
+            self._initialized = True
+        except ConnectionFailure as exc:
+            raise ConnectionFailure("Failed to connect to MongoDB") from exc
+
     def get_database(self):
-        # assertion if not true raise an error
-        assert self._instance, "Database Connection not initialized"
-        return self._instance[settings.MONGO_DATABASE_NAME]
+        assert self._client is not None, "Database connection not initialized"
+        return self._client[settings.MONGO_DATABASE_NAME]
 
     def close(self):
-        if self._instance:
-            self._instance.close()
+        if self._client is not None:
+            self._client.close()
             print("MongoDB connection closed")
 
 connection = MongoDatabaseConnector()

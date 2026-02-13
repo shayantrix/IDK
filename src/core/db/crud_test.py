@@ -1,5 +1,39 @@
 import pymongo
 
+from core.config import settings
+
+class TestIDK:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._client = None
+            cls._instance._initialized = False
+        return cls._instance
+
+    def __init__(self):
+        if self._initialized:
+            return
+        try:
+            self._client = MongoClient(settings.MONGO_DATABASE_HOST)
+            self._initialized = True
+
+        except ConnectionFailure as exc:
+            raise ConnectionFailure("Failed to connect to MongoDB")
+
+    def get_database(self):
+        assert self._client is not None, "Database connection not initialized"
+        return self._client[settings.MONGO_DATABASE_NAME]
+
+    def close(self):
+        if self._client is not None:
+            self._client.close()
+            print("MongoDB connection closed")
+
+
+
+
 class Student:
     def __init__(self, sid, username, email, department):
         self.sid = sid
