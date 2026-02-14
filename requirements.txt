@@ -1,0 +1,8 @@
+pydantic
+pymongo
+pydantic_settings
+langchain_community
+bs4
+selenium
+html2text
+tqdm
