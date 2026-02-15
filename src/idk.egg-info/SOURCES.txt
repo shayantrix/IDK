@@ -3,11 +3,13 @@ README.md
 pyproject.toml
 src/core/__init__.py
 src/core/config.py
+src/core/mq.py
 src/core/db/__init__.py
 src/core/db/crud_test.py
 src/core/db/documents.py
 src/core/db/mongo.py
 src/core/db/test_connection.py
+src/data_cdc/cdc.py
 src/data_crawling/dispatcher.py
 src/data_crawling/main.py
 src/data_crawling/crawlers/__init__.py
