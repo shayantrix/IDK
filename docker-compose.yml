@@ -29,7 +29,34 @@ services:
     volumes:
       - mongo-replica-3-data:/data/db
 
-  rabitmq:
+  mongo-init:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb-initializer
+    depends_on:
+      - mongodb1
+      - mongodb2
+      - mongodb3
+    entrypoint: >
+      bash -c "
+        echo 'Waiting for MongoDB to start...' &&
+        sleep 10 &&
+        mongosh --host mongodb1 --port 30001 --eval '
+          try {
+            rs.status()
+          } catch (e) {
+            rs.initiate({
+              _id: \"my-replica-set\",
+              members: [
+                { _id: 0, host: \"mongodb1:30001\" },
+                { _id: 1, host: \"mongodb2:30002\" },
+                { _id: 2, host: \"mongodb3:30003\" }
+              ]
+            })
+          }
+        '
+      "
+
+  rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     ports:
