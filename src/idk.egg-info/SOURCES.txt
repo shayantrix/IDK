@@ -15,6 +15,7 @@ src/data_crawling/main.py
 src/data_crawling/crawlers/__init__.py
 src/data_crawling/crawlers/base.py
 src/data_crawling/crawlers/custom_article.py
+src/feature_pipeline/utils/chunking.py
 src/idk.egg-info/PKG-INFO
 src/idk.egg-info/SOURCES.txt
 src/idk.egg-info/dependency_links.txt

@@ -1,13 +1,15 @@
-import sys
+import os
 from urllib.parse import urlparse
+
+# LangChain checks USER_AGENT while loading some components.
+os.environ.setdefault(
+    "USER_AGENT",
+    "idk-crawler/0.1 (+https://beej.us/guide/bgnet/html/index-wide.html)",
+)
 
 from core.db.documents import ArticleDocument
 from langchain_community.document_loaders import AsyncHtmlLoader
-from langchain_community.document_transformers import Html2TextTransformer
-
-
 from bs4 import BeautifulSoup
-import requests
 
 from .base import BaseCrawler
 
@@ -29,28 +31,27 @@ class CustomArticleCrawler(BaseCrawler):
         # docs = BeautifulSoup(response.text, 'html.parser')
         # doc_transformed = docs.get_text()
 
-        print("Hello world")
         loader = AsyncHtmlLoader([link], trust_env=True)
         docs = await loader.aload()
-        print("Loaded docs: ", docs)
-        print(26)
+        try:
+            from langchain_community.document_transformers import Html2TextTransformer
 
-        docs[0].page_content[1000:2000]
-        print(29)
-        html2text = Html2TextTransformer()
-        docs_transformed = html2text.transform_documents(docs)
-        doc_transformed = docs_transformed[0]
-        #
-        print(doc_transformed)
-        print(44)
+            html2text = Html2TextTransformer()
+            docs_transformed = html2text.transform_documents(docs)
+            doc_transformed = docs_transformed[0]
+            page_content = doc_transformed.page_content
+            metadata = doc_transformed.metadata
+        except Exception:
+            soup = BeautifulSoup(docs[0].page_content, "html.parser")
+            page_content = soup.get_text(separator="\n", strip=True)
+            metadata = docs[0].metadata
+
         content = {
-                    "Title": doc_transformed.metadata.get("title"),
-                    "Subtitle": doc_transformed.metadata.get("description"),
-                    "Content": doc_transformed.page_content,
-                    "language": doc_transformed.metadata.get("language"),
+                    "Title": metadata.get("title"),
+                    "Subtitle": metadata.get("description"),
+                    "Content": page_content,
+                    "language": metadata.get("language"),
                 }
-
-        print(52)
 
         parsed_url = urlparse(link)
         platform = parsed_url.netloc

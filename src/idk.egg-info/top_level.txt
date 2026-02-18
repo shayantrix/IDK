@@ -1,3 +1,4 @@
 core
 data_cdc
 data_crawling
+feature_pipeline
