@@ -1,7 +1,9 @@
 from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT_DIR = str(Path(__file__).parent.parent.parent)
+
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -9,19 +11,29 @@ class AppSettings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
-    #mongodb
+    # mongodb
     MONGO_DATABASE_HOST: str = (
-        "mongodb://localhost:30001/?directConnection=true"
+        "mongodb://mongo1:30001,mongo2:30002,mongo3:30003/?replicaSet=my-replica-set"
     )
     MONGO_DATABASE_NAME: str = "IDK"
-
-    def patch_localhost(self) -> None:
-        self.MONGO_DATABASE_HOST = "mongodb://localhost:30001/?directConnection=true"
 
     # rabbitmq
     RABBITMQ_DEFAULT_USERNAME: str = "guest"
     RABBITMQ_DEFAULT_PASSWORD: str = "guest"
     RABBITMQ_HOST: str = "localhost"
     RABBITMQ_PORT: int = 5672
+
+    # QdrantDB Config
+    QDRANT_CLOUD_URL: str = "str"
+    QDRANT_DATABASE_HOST: str = "qdrant"
+    QDRANT_DATABASE_PORT: int = 6333
+    USE_QDRANT_CLOUD: bool = False
+    QDRANT_APIKEY: str | None = None
+
+    def patch_localhost(self) -> None:
+        self.MONGO_DATABASE_HOST = "mongodb://localhost:30001,localhost:30002,localhost:30003/?replicaSet=my-replica-set"
+        self.QDRANT_DATABASE_HOST = "localhost"
+        self.RABBITMQ_HOST = "localhost"
+
 
 settings = AppSettings()

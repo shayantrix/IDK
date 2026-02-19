@@ -6,3 +6,6 @@ bs4
 selenium
 html2text
 tqdm
+bytewax
+pika
+qdrant_client

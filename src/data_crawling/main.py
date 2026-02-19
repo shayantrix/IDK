@@ -1,18 +1,21 @@
-from pathlib import Path
-import sys
-from typing import Any
 import asyncio
+import sys
+from pathlib import Path
+from typing import Any
 
 # Allow running this file directly: `python src/data_crawling/main.py`
 PROJECT_SRC = Path(__file__).resolve().parents[1]
 if str(PROJECT_SRC) not in sys.path:
     sys.path.insert(0, str(PROJECT_SRC))
 
-from .dispatcher import CrawlerDispatcher
 from .crawlers.custom_article import CustomArticleCrawler
+from .dispatcher import CrawlerDispatcher
 
 _dispatcher = CrawlerDispatcher()
-_dispatcher.register("https://beej.us/guide/bgnet/html/index-wide.html", CustomArticleCrawler)
+_dispatcher.register(
+    "https://beej.us/guide/bgnet/html/index-wide.html", CustomArticleCrawler
+)
+
 
 async def handler(event) -> dict[str, Any]:
     link = event.get("link")
@@ -21,13 +24,9 @@ async def handler(event) -> dict[str, Any]:
 
     try:
         await crawler.extract(link=link, author_id=user_id)
-        return {
-            "statuscode": 200, "body": "Link processed successfully"
-        }
+        return {"statuscode": 200, "body": "Link processed successfully"}
     except Exception as e:
-        return {
-            "statuscode": 500, "body": f"An error occurred: {str(e)}"
-        }
+        return {"statuscode": 500, "body": f"An error occurred: {str(e)}"}
 
 
 if __name__ == "__main__":

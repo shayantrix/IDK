@@ -8,6 +8,7 @@ src/core/db/__init__.py
 src/core/db/crud_test.py
 src/core/db/documents.py
 src/core/db/mongo.py
+src/core/db/qdrant.py
 src/core/db/test_connection.py
 src/data_cdc/cdc.py
 src/data_crawling/dispatcher.py
@@ -15,6 +16,10 @@ src/data_crawling/main.py
 src/data_crawling/crawlers/__init__.py
 src/data_crawling/crawlers/base.py
 src/data_crawling/crawlers/custom_article.py
+src/feature_pipeline/config.py
+src/feature_pipeline/word_counter.py
+src/feature_pipeline/data_flow/stream_input.py
+src/feature_pipeline/data_flow/stream_output.py
 src/feature_pipeline/utils/chunking.py
 src/idk.egg-info/PKG-INFO
 src/idk.egg-info/SOURCES.txt

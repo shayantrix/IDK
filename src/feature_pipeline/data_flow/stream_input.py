@@ -5,11 +5,12 @@ from typing import Generic, Iterable, List, Optional, TypeVar
 
 from bytewax.inputs import FixedPartitionedSource, StatefulSourcePartition
 from config import settings
-from core import get_logger
+
 from core.mq import RabbitMQConnection
 
 DataT = TypeVar("DataT")
 MessageT = TypeVar("MessageT")
+
 
 class RabbitMQPartition(StatefulSourcePartition, Generic[DataT, MessageT]):
     """
@@ -17,7 +18,7 @@ class RabbitMQPartition(StatefulSourcePartition, Generic[DataT, MessageT]):
     Inherits StatefulSourcePartition for snapshot functionality that enables saving the state of the queue
     """
 
-    def __init__(self, queue_name: str, resume_state: MessageT | None=None) -> None:
+    def __init__(self, queue_name: str, resume_state: MessageT | None = None) -> None:
         self._in_flight_msg_ids = resume_state or set()
         self.queue_name = queue_name
         self.connection = RabbitMQConnection()
@@ -30,7 +31,7 @@ class RabbitMQPartition(StatefulSourcePartition, Generic[DataT, MessageT]):
                 queue=self.queue_name, auto_ack=True
             )
         except Exception:
-            print(f"Error while fetching message from queue.", queue_name=self.queue_name)
+            print(f"Error while fetching message from queue. {self.queue_name}")
             time.sleep(10)
 
             self.connection.connect()
@@ -57,6 +58,7 @@ class RabbitMQPartition(StatefulSourcePartition, Generic[DataT, MessageT]):
 
     def close(self):
         self.channel.close()
+
 
 class RabbitMQSource(FixedPartitionedSource):
     def list_parts(self) -> List[str]:

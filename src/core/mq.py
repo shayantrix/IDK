@@ -2,9 +2,11 @@
 from typing import Self
 
 import pika
+
 from .config import settings
 
-class RabbitmqConnection:
+
+class RabbitMQConnection:
     """Singleton class to manage RabbitMQ connection."""
 
     _instance = None
@@ -14,17 +16,23 @@ class RabbitmqConnection:
             cls._instance = super().__new__(cls, *args, **kwargs)
         return cls._instance
 
-    def __init__(self, host: str | None = None, port: int | None = None,
-        username: str | None = None, password: str | None = None,
-        virtual_host: str = "/", fail_silently: bool = False,
-        **kwargs) -> None:
-            self.host = host or settings.RABBITMQ_HOST
-            self.port = port or settings.RABBITMQ_PORT
-            self.username = username or settings.RABBITMQ_DEFAULT_USERNAME
-            self.password = password or settings.RABBITMQ_DEFAULT_PASSWORD
-            self.virtual_host = virtual_host
-            self.fail_silently = fail_silently
-            self.connection = None
+    def __init__(
+        self,
+        host: str | None = None,
+        port: int | None = None,
+        username: str | None = None,
+        password: str | None = None,
+        virtual_host: str = "/",
+        fail_silently: bool = False,
+        **kwargs,
+    ) -> None:
+        self.host = host or settings.RABBITMQ_HOST
+        self.port = port or settings.RABBITMQ_PORT
+        self.username = username or settings.RABBITMQ_DEFAULT_USERNAME
+        self.password = password or settings.RABBITMQ_DEFAULT_PASSWORD
+        self.virtual_host = virtual_host
+        self.fail_silently = fail_silently
+        self._connection = None
 
     def __enter__(self):
         self.connect()
@@ -65,10 +73,11 @@ class RabbitmqConnection:
 """The data variable, which is expected to be a JSON string,
 represents the changes captured by MongoDB's CDC mechanism."""
 
+
 def publish_to_rabbitmq(queue_name: str, data: str):
     """publish data to rabbitmq"""
     try:
-        rabbitmq_conn = RabbitmqConnection()
+        rabbitmq_conn = RabbitMQConnection()
 
         # establish connection
         with rabbitmq_conn:
@@ -90,7 +99,7 @@ def publish_to_rabbitmq(queue_name: str, data: str):
                 ),
             )
     except pika.exceptions.UnroutableError:
-        print(f"Failed to publish message to RabbitMQ")
+        print("Failed to publish message to RabbitMQ")
     except Exception:
         print("Error publishing to RabbitMQ")
 
