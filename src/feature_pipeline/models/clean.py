@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from models.base import VectorDBDataModel
 
 
-class ArticleCleanModel(VectorDBDataModel):
+class ArticleCleanedModel(VectorDBDataModel):
     entry_id: str
     platform: str
     link: str
