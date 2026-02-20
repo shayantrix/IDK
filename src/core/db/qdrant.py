@@ -35,5 +35,37 @@ class QdrantDatabaseConnector:
             collection_name=collection_name,
             vectors_config=VectorParams(
                 size=settings.EMBEDDING_SIZE,
+                distance=Distance.COSINE,
             ),
         )
+
+    def write_data(self, collection_name: str, points: Batch):
+        try:
+            self._instance.upsert(collection_name=collection_name, points=points)
+        except Exception:
+            print("An error occurred while writing data to Qdrant.")
+
+            raise
+
+    def search(
+        self,
+        collection_name: str,
+        query_vector: list,
+        query_filter: models.Filter | None = None,
+        limit: int = 3,
+    ) -> list:
+        return self._instance.search(
+            collection_name=collection_name,
+            query_vector=query_vector,
+            query_filter=query_filter,
+            limit=limit,
+        )
+
+    def scroll(self, collection_name: str, limit: int):
+        return self._instance.scroll(collection_name=collection_name, limit=limit)
+
+    def close(self):
+        if self._instance:
+            self._instance.close()
+
+            print("connection to database closed")

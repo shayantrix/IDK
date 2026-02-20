@@ -20,6 +20,8 @@ src/feature_pipeline/config.py
 src/feature_pipeline/word_counter.py
 src/feature_pipeline/data_flow/stream_input.py
 src/feature_pipeline/data_flow/stream_output.py
+src/feature_pipeline/models/__init__.py
+src/feature_pipeline/models/base.py
 src/feature_pipeline/utils/chunking.py
 src/idk.egg-info/PKG-INFO
 src/idk.egg-info/SOURCES.txt

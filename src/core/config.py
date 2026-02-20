@@ -30,6 +30,11 @@ class AppSettings(BaseSettings):
     USE_QDRANT_CLOUD: bool = False
     QDRANT_APIKEY: str | None = None
 
+    # Embedding conf
+    EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
+    EMBEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
+    EMBEDDING_SIZE: int = 384
+
     def patch_localhost(self) -> None:
         self.MONGO_DATABASE_HOST = "mongodb://localhost:30001,localhost:30002,localhost:30003/?replicaSet=my-replica-set"
         self.QDRANT_DATABASE_HOST = "localhost"
