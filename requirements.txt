@@ -9,3 +9,4 @@ tqdm
 bytewax
 pika
 qdrant_client
+unstructured
