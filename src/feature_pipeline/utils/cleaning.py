@@ -6,6 +6,12 @@ from unstructured.cleaners.core import (
     replace_unicode_quotes,
 )
 
+
+def remove_whitespace(text):
+    text = text.strip()
+    return text
+
+
 def unbold_text(text):
     # Mapping of bold numbers to their regular equivalents
     bold_numbers = {
@@ -61,45 +67,15 @@ def unitalic_text(text):
     text = italic_pattern.sub(convert_italic_char, text)
     return text
 
-def remove_emojis_and_symbols(text):
-    # Extended pattern to include specific symbols like ↓ (U+2193) or ↳ (U+21B3)
-    emoji_and_symbol_pattern = re.compile(
-        "["
-        "\U0001f600-\U0001f64f"  # emoticons
-        "\U0001f300-\U0001f5ff"  # symbols & pictographs
-        "\U0001f680-\U0001f6ff"  # transport & map symbols
-        "\U0001f1e0-\U0001f1ff"  # flags (iOS)
-        "\U00002193"  # downwards arrow
-        "\U000021b3"  # downwards arrow with tip rightwards
-        "\U00002192"  # rightwards arrow
-        "]+",
-        flags=re.UNICODE,
-    )
-
-    return emoji_and_symbol_pattern.sub(r" ", text)
-
-def replace_urls_with_placeholder(text, placeholder="[URL]"):
-    # Regular expression pattern for matching URLs
-    url_pattern = r"https?://\S+|www\.\S+"
-
-    return re.sub(url_pattern, placeholder, text)
-
-
-def remove_non_ascii(text: str) -> str:
-    text = text.encode("ascii", "ignore").decode("ascii")
-    return text
-
 
 def clean_text(text_content: str | None) -> str:
     if text_content is None:
         return ""
 
+    cleaned_text = remove_whitespace(text_content)
     cleaned_text = unbold_text(text_content)
     cleaned_text = unitalic_text(cleaned_text)
-    cleaned_text = remove_emojis_and_symbols(cleaned_text)
     cleaned_text = clean(cleaned_text)
     cleaned_text = replace_unicode_quotes(cleaned_text)
-    cleaned_text = clean_non_ascii_chars(cleaned_text)
-    cleaned_text = replace_urls_with_placeholder(cleaned_text)
 
     return cleaned_text
