@@ -27,3 +27,8 @@ class ArticleCleaningHandler(CleaningDataHandler):
             author_id=data_model.author_id,
             type=data_model.type,
         )
+
+if __name__ == "__main__":
+    handler = ArticleCleaningHandler()
+    cleaned_data = handler.clean(ArticleRawModel(entry_id="1", platform="test", link="test", content={"test": "test"}, author_id="1", type="articles"))
+    print(cleaned_data)

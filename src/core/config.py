@@ -15,6 +15,7 @@ class AppSettings(BaseSettings):
     MONGO_DATABASE_HOST: str = (
         "mongodb://mongo1:30001,mongo2:30002,mongo3:30003/?replicaSet=my-replica-set"
     )
+    #mongodb://localhost:30001/?directConnection=true
     MONGO_DATABASE_NAME: str = "IDK"
 
     # rabbitmq
@@ -22,10 +23,11 @@ class AppSettings(BaseSettings):
     RABBITMQ_DEFAULT_PASSWORD: str = "guest"
     RABBITMQ_HOST: str = "localhost"
     RABBITMQ_PORT: int = 5672
+    RABBITMQ_QUEUE_NAME: str = "default"
 
     # QdrantDB Config
     QDRANT_CLOUD_URL: str = "str"
-    QDRANT_DATABASE_HOST: str = "qdrant"
+    QDRANT_DATABASE_HOST: str = "localhost"
     QDRANT_DATABASE_PORT: int = 6333
     USE_QDRANT_CLOUD: bool = False
     QDRANT_APIKEY: str | None = None

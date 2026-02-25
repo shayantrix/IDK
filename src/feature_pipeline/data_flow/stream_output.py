@@ -3,7 +3,9 @@ from qdrant_client.models import Batch
 
 from core.db.qdrant import QdrantDatabaseConnector
 from feature_pipeline.models.base import VectorDBDataModel
+from feature_pipeline.models.embedded_chunk import ArticleEmbeddedChunkModel
 
+# connection between Bytewax and Qdrant -> storing vector data to Qdrant
 
 class QdrantOutput(DynamicSink):
     """
@@ -67,8 +69,10 @@ class QdrantCleanedDataSink(StatelessSinkPartition):
 
     def write_batch(self, items: list[VectorDBDataModel]) -> None:
         payloads = [item.to_payload() for item in items]
+        print(71)
         ids, data = zip(*payloads)
         collection_name = get_clean_collection(data_type=data[0]["type"])
+        print(74)
         self._client.write_data(
             collection_name=collection_name,
             points=Batch(ids=ids, vectors={}, payloads=data),
@@ -91,3 +95,16 @@ def get_vector_collection(data_type: str) -> str:
         return "vector_articles"
     else:
         raise ValueError(f"Unsupported data type: {data_type}")
+
+
+if __name__ == "__main__":
+    connection = QdrantDatabaseConnector()
+    # qdrant_sink = QdrantCleanedDataSink(connection)
+    # qdrant_sink.write_batch(
+    #     [
+    #         ArticleEmbeddedChunkModel(id="1", type="articles", vector=[1.0, 2.0], payload={"title": "test"}),
+    #         ArticleEmbeddedChunkModel(id="2", type="articles", vector=[3.0, 4.0], payload={"title": "test2"}),
+    #     ]
+    # )
+    output = QdrantOutput(connection, sink_type="clean")
+    output.build(worker_index=1, worker_count=1)

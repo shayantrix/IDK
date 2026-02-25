@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
 
-from models.base import VectorDBDataModel
+from .base import VectorDBDataModel
 
 
 class ArticleCleanedModel(VectorDBDataModel):
@@ -21,3 +21,14 @@ class ArticleCleanedModel(VectorDBDataModel):
         }
 
         return self.entry_id, data
+
+if __name__ == "__main__":
+    model = ArticleCleanedModel(
+        entry_id="1",
+        platform="platform",
+        link="link",
+        cleaned_content="cleaned_content",
+        author_id="author_id",
+        type="type",
+    )
+    print(model.to_payload())

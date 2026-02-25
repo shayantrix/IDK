@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import numpy as np
-from models.base import VectorDBDataModel
+from .base import VectorDBDataModel
 
 
 class ArticleEmbeddedChunkModel(VectorDBDataModel):

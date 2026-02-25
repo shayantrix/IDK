@@ -4,7 +4,7 @@ from qdrant_client import QdrantClient, models
 from qdrant_client.http.models import Batch, Distance, VectorParams
 
 from core.config import settings
-
+from feature_pipeline.models.base import VectorDBDataModel
 
 class QdrantDatabaseConnector:
     _instance: QdrantClient | None = None
@@ -69,3 +69,19 @@ class QdrantDatabaseConnector:
             self._instance.close()
 
             print("connection to database closed")
+
+
+if __name__ == "__main__":
+    connection = QdrantDatabaseConnector()
+    connection.create_vector_collection("articles") if not connection._instance.collection_exists("articles") else None
+    print(connection.get_collection("articles"))
+    # connection.write_data(
+    #     "articles",
+    #     [
+    #         VectorDBDataModel(id="1", type="articles", vector=[1.0, 2.0], payload={"title": "test"}),
+    #         VectorDBDataModel(id="2", type="articles", vector=[3.0, 4.0], payload={"title": "test2"}),
+    #     ],
+    # )
+    # print(connection.search("articles", [1.0, 2.0]))
+    # print(connection.scroll("articles", 2))
+    connection.close()

@@ -10,7 +10,6 @@ def list_article_ids() -> list[str]:
     ids = [str(doc.get("_id")) for doc in collection.find({}, {"_id": 1}) if doc.get("_id")]
     return ids
 
-
 def get_article_content(article_id: str) -> str:
     article = ArticleDocument.find(_id=article_id)
     if article is None:
