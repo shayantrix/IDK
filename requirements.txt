@@ -10,3 +10,7 @@ bytewax
 pika
 qdrant_client
 unstructured
+langchain-text-splitters
+langchain
+sentence-transformers
+InstructorEmbedding

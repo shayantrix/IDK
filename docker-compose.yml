@@ -7,7 +7,7 @@ services:
     ports:
       - "30001:30001"
     volumes:
-      - mongo-replica-1-data:/data/db
+      - ./db-data/mongodb1:/data/db
 
   mongodb2:
     image: mongodb/mongodb-community-server:latest
@@ -17,7 +17,7 @@ services:
     ports:
       - "30002:30002"
     volumes:
-      - mongo-replica-2-data:/data/db
+      - ./db-data/mongodb2:/data/db
 
   mongodb3:
     image: mongodb/mongodb-community-server:latest
@@ -27,7 +27,7 @@ services:
     ports:
       - "30003:30003"
     volumes:
-      - mongo-replica-3-data:/data/db
+      - ./db-data/mongodb3:/data/db
 
   mongo-init:
     image: mongodb/mongodb-community-server:latest
@@ -80,8 +80,5 @@ services:
     restart: always
 
 volumes:
-  mongo-replica-1-data:
-  mongo-replica-2-data:
-  mongo-replica-3-data:
   rabbitmq-data:
   qdrant-data:
