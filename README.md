@@ -1,6 +1,6 @@
 # IDK
 I really dont know what I am doing here but lets go forward and see
-
+Building AI-agent which is like my own twin
 #### mongodb replicas
 ```docker exec -it mongodb1 mongosh --port 30001```
 
