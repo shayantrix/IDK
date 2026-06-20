@@ -1,6 +1,6 @@
 # IDK
 I really dont know what I am doing here but lets go forward and see
-Building AI-agent which is like my own twin
+Building AI-agent which is works by the documents I feed it. In my own example I tried to make a really clever system that can handle System networking better than anyone :D, well not better than humans with 20 years of job experience I wish :). But really you can feed it the url of the book (.pdf) that you want it to be expert in and answer your questions.
 #### mongodb replicas
 ```docker exec -it mongodb1 mongosh --port 30001```
 
