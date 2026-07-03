@@ -1,4 +1,6 @@
 pydantic
+opik
+config
 pymongo
 pydantic_settings
 langchain_community
@@ -12,5 +14,6 @@ qdrant_client
 unstructured
 langchain-text-splitters
 langchain
+langchain_openai
 sentence-transformers
 InstructorEmbedding

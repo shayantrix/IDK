@@ -21,14 +21,15 @@ class QueryExpansionTemplate(BasePromptTemplate):
 
     @property
     def seperator(self) -> str:
-        return "--next-question--"
+        return "#next-question#"
 
-    def create_prompt_template(self, *args) -> PromptTemplate:
+    def create_prompt_template(self, to_expand_to: int=5) -> PromptTemplate:
         return PromptTemplate(
             template=self.prompt,
             input_variables=["question"],
             partial_variables={
                 "seperator": self.seperator,
+                "to_expand_to": to_expand_to
             },
             verbose=True
         )
@@ -59,6 +60,33 @@ class SelfQueryTemplate(BasePromptTemplate):
             input_variables=["question"],
             verbose=True
         )
+    
+class RerankingTemplate(BasePromptTemplate):
+    prompt: str = """You are called 'Alfered', and a AI Agent model assistant. Your task is to rerank passages related to a query
+    based on their relevance. 
+    The most relevant passages should be put at the beginning. 
+    You should only pick at max {keep_top_k} passages.
+    The provided and reranked documents are separated by '{separator}'.
+    
+    The following are passages related to this query: {question}.
+    
+    Passages: 
+    {passages}
+    """
+
+    def create_template(self, keep_top_k: int) -> PromptTemplate:
+        return PromptTemplate(
+            template=self.prompt,
+            input_variables=["question", "passages"],
+            partial_variables={
+                "keep_top_k": keep_top_k,
+                "separator": self.seperator,
+            },
+        )
+    
+    @property
+    def seperator(self) -> str:
+        return "\n#next-document#\n"
 
 # hybrid score = (1 - alpha) * sparse_score + alpha * dense_score
 

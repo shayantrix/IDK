@@ -37,6 +37,16 @@ class AppSettings(BaseSettings):
     EMBEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
     EMBEDDING_SIZE: int = 384
 
+    # LLM Model config
+    HUGGINGFACE_ACCESS_TOKEN: str | None = None
+    MODEL_ID: str = "pauliusztin/LLMTwin-Llama-3.1-8B"
+    DEPLOYMENT_ENDPOINT_NAME: str = "twin"
+
+    # OpenAI config
+    OPENAI_MODEL_ID: str = "gpt-4o-mini"
+    OPENAI_API_KEY: str | None = None
+
+
     def patch_localhost(self) -> None:
         self.MONGO_DATABASE_HOST = "mongodb://localhost:30001,localhost:30002,localhost:30003/?replicaSet=my-replica-set"
         self.QDRANT_DATABASE_HOST = "localhost"
